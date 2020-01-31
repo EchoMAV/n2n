@@ -19,8 +19,13 @@ provide your UCAMS/XCAMS credentials, then continue:
 make -C $HOME/n2n install
 ```
 
-This will pull in the necessary dependencies including `n2n`, and configure it
-as appropriate for your system.
+This will pull in the necessary dependencies, build `n2n` and configure it
+as appropriate for your system.  Then, proceed to configure:
+```
+make -C $HOME/n2n provision
+```
+
+This will enter into an interactive session to help you setup your VPN.
 
 ## Usage:
 

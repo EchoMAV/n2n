@@ -5,7 +5,6 @@ SN := $(shell hostname)
 SUDO := $(shell test $${EUID} -ne 0 && echo "sudo")
 .EXPORT_ALL_VARIABLES:
 
-
 CONFIG ?= /var/local
 EDGE=/usr/sbin/edge
 LIBSYSTEMD=/lib/systemd/system
@@ -42,7 +41,11 @@ install: deps
 	$(MAKE) --no-print-directory restore-services
 
 provision: $(CONFIG)
-	$(SUDO) python3 configure.py --mavnet=$(CONFIG)/$(SN).mav
+	@if [ -e $(CONFIG)/$(SN).mav ] ; then \
+		$(SUDO) python3 configure.py --mavnet=$(CONFIG)/$(SN).mav --interactive ; \
+	else \
+		$(SUDO) python3 configure.py --interactive --start ; \
+	fi
 
 restore-services:
 	@( for s in $(SERVICES) ; do $(SUDO) systemctl disable $$s ; done ; /bin/true )
