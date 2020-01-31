@@ -30,38 +30,48 @@ from n2n import edge, edge_active
 
 ### connect to an existing network thru the default supernode (`video.mavnet.online`)
 ```python
-edge(ssid='TheConnection', psk='ThePassphrase', ip='172.20.5.20/24')
+edge(ssid='TheConnection', psk='ThePassphrase', ip='172.20.5.20/24', start=True)
 ```
 
 ### turn VPN on (keep same parameters as previously configured)
 ```python
-edge(enable=True)
+edge(start=True)
 ```
 
 ### turn VPN off
 ```python
-edge(enable=False)
+edge(start=False)
 ```
 
 ## Command Line
 
 ```
-usage: configure.py [-h] [--aes] [-a IP] [-c N] [-d DEV] [--enable] [-k N]
-                    [-l IP:PORT]
+usage: configure.py [-h] [-A] [-a IP] [-c N] [-d DEV] [--enable] [-E] [-k N] [-l IP:PORT] [--start] [--version]
 
 Configure N2N
 
 optional arguments:
   -h, --help            show this help message and exit
-  --aes                 Use AES (default: False)
+  -A, --aes             Use AES (default: False)
   -a IP, --address IP   IP address of edge node (default: None)
   -c N, --community N   Community name (default: None)
-  -d DEV, --device DEV  TAP device (default: None)
-  --enable              Enable EDGE (default: False)
+  -d DEV, --device DEV  TUN device (default: None)
+  --enable              Enable EDGE service at boot (default: False)
+  -E, --multicast       Accept Multicast (default: False)
   -k N, --key N         Encryption Key (default: None)
   -l IP:PORT, --supernode IP:PORT
                         Supernode address:port (default: 52.222.1.20:1200)
+  --start               Start EDGE service (default: False)
+  --version             show program's version number and exit
 ```
+
+### connect to an existing network thru the default supernode (`video.mavnet.online`)
+```
+sudo ./configure.py --address=172.20.5.20/24 --key="ThePassphrase" -c "TheConnection" --enable --start
+```
+
+This will configure the system to connect to the VPN with the given address and 255.255.255.0 netmask.
+The service will be started and it will be setup to start on boot.
 
 ## Files
 

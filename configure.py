@@ -1,10 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''
 Configure N2N
 '''
 import logging, os, subprocess
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 logger = logging.getLogger(__name__)
 
@@ -31,15 +31,25 @@ def _syscall(cmd: str, ignore: bool = False):
         if not ignore:
             raise
 
+# https://stackoverflow.com/questions/33750233/convert-cidr-to-subnet-mask-in-python
+def _cidr_to_netmask(cidr):
+    """Convert CIDR notation to IP, dotted-decimal netmask"""
+    import socket, struct
+
+    network, bits = cidr.split('/')
+    m = 32 - int(bits)
+    netmask = socket.inet_ntoa(struct.pack('!I', (1 << 32) - (1 << m)))
+    return network, netmask
+
 def edge_active():
     """Determine if the VPN is up and running."""
     return os.system('systemctl status edge') == 0
 
-def edge(enable: bool = False, cid: str = None, psk: str = None, ip: str = None, dev: str = 'edge0', **kwargs):
+def edge(start: bool = False, cid: str = None, psk: str = None, ip: str = None, dev: str = 'edge0', **kwargs):
     """
     Become a WiFi access point with the credentials as given
 
-    :option enable: A boolean indicating whether to enable or disable the VPN
+    :option start:  A boolean indicating whether to start or stop the VPN
     :option cid:    A string containing the community id to connect to
     :option psk:    A string containing the pre-shared key to use
     :option ip:     A string representing the IP address to assign to the edge node
@@ -49,15 +59,21 @@ def edge(enable: bool = False, cid: str = None, psk: str = None, ip: str = None,
     the previous configuration.  In this way, one can 'provision' using a full set
     of parameters, then enable/disable using only the 'CID' parameter.
 
+    IP can be given as dotted-decimal (xxx.xxx.xxx.xxx) or CIDR (xxx.xxx.xxx.xxx/nnn),
+    the latter also assigning the appropriate netmask.
+
     Keyword arguments:
 
-    :option aes:    A boolean indicating whether to use AES (True) or TwoFish (False, default)
+    :option aes:        A boolean indicating whether to use AES (True) or TwoFish (False, default)
+    :option enable:     A boolean indicating whether to enable or disable the VPN at boot
+    :option multicast:  A boolean indicating whether to enable Multicast (True, default) or not
+
     """
-    if not enable:
+    if not start:
         _syscall('systemctl stop edge')
 
     if cid is None or psk is None or ip is None:
-        if enable:
+        if start:
             _syscall('systemctl start edge')
         return
 
@@ -66,6 +82,10 @@ def edge(enable: bool = False, cid: str = None, psk: str = None, ip: str = None,
     conf['c'] = cid
     conf['k'] = psk
     conf['a'] = ip
+    if conf['a'].rfind('/') >= 0:
+        ip,mask = _cidr_to_netmask(conf['a'])
+        conf['a'] = ip
+        conf['s'] = mask    # cause emission of -s=xxx.xxx.xxx.xxx
     if dev is not None:
         conf['d'] = dev
         conf['r'] = ''      # cause emission of '-r'
@@ -79,6 +99,9 @@ def edge(enable: bool = False, cid: str = None, psk: str = None, ip: str = None,
     aes = kwargs.get('aes', False)
     if aes:
         conf['A'] = ''      # cause emission of '-A'
+    multicast = kwargs.get('multicast', True)
+    if multicast:
+        conf['E'] = ''      # cause emission of '-E'
 
     with open(_ETC_N2N_EDGE_CONF_PATH,'w') as f:
         for k in conf:
@@ -87,7 +110,10 @@ def edge(enable: bool = False, cid: str = None, psk: str = None, ip: str = None,
             else:
                 f.write('-'+k+'\n')
 
-    if enable:
+    enable = kwargs.get('enable', False)
+    _syscall('systemctl {} edge'.format('enable' if enable else 'disable'))
+
+    if start:
         _syscall('systemctl restart edge')
 
 
@@ -105,13 +131,16 @@ if __name__ == "__main__":
     from argparse import ArgumentParser
 
     parser = ArgumentParser(description=__doc__)
-    parser.add_argument(      '--aes', action='store_true', default=False, help='Use AES (default: %(default)s)')
+    parser.add_argument('-A', '--aes', action='store_true', default=False, help='Use AES (default: %(default)s)')
     parser.add_argument('-a', '--address', metavar='IP', type=str, default=None, help='IP address of edge node (default: %(default)s)')
     parser.add_argument('-c', '--community', metavar='N', type=str, default=None, help='Community name (default: %(default)s)')
-    parser.add_argument('-d', '--device', metavar='DEV', type=str, default=None, help='TAP device (default: %(default)s)')
-    parser.add_argument(      '--enable', action='store_true', default=False, help='Enable EDGE (default: %(default)s)')
+    parser.add_argument('-d', '--device', metavar='DEV', type=str, default=None, help='TUN device (default: %(default)s)')
+    parser.add_argument(      '--enable', action='store_true', default=False, help='Enable EDGE service at boot (default: %(default)s)')
+    parser.add_argument('-E', '--multicast', action='store_true', default=False, help='Accept Multicast (default: %(default)s)')
     parser.add_argument('-k', '--key', metavar='N', type=str, default=None, help='Encryption Key (default: %(default)s)')
     parser.add_argument('-l', '--supernode', metavar='IP:PORT', type=str, default='52.222.1.20:1200', help='Supernode address:port (default: %(default)s)')
+    parser.add_argument(      '--start', action='store_true', default=False, help='Start EDGE service (default: %(default)s)')
+    parser.add_argument(      '--version', action='version', version='%(prog)s '+__version__)
     args = parser.parse_args()
 
     # make logging work for more than just WARNINGS+
@@ -124,8 +153,10 @@ if __name__ == "__main__":
     d['cid'] = args.community
     d['dev'] = args.device
     d['enable'] = args.enable
+    d['multicast'] = args.multicast
     d['psk'] = args.key
     d['supernode'] = args.supernode
+    d['start'] = args.start
 
     if d['psk'] is None:
         d['psk'] = _auth(d['cid'])
