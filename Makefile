@@ -48,10 +48,10 @@ restore-services:
 	@( for s in $(SERVICES) ; do $(SUDO) systemctl disable $$s ; done ; /bin/true )
 	@( for s in $(SERVICES_ENABLE) ; do $(SUDO) install -Dm644 $$s $(LIBSYSTEMD)/$$s ; done ; /bin/true )
 	$(SUDO) systemctl daemon-reload
-	@( for s in $(SERVICES_ENABLE) ; $(SUDO) do systemctl enable $$s ; done ; /bin/true )
+	@( for s in $(SERVICES_ENABLE) ; do $(SUDO) systemctl enable $$s ; done ; /bin/true )
 
 uninstall:
-	@( for s in $(SERVICES) ; do $(SUDO) systemctl disable $$s ; done ; /bin/true )
+	@( for s in $(SERVICES) ; do $(SUDO) systemctl disable $$s ; $(SUDO) systemctl stop $$s ; done ; /bin/true )
 	@( for s in $(SERVICES) ; do $(SUDO) rm -f $(LIBSYSTEMD)/$$s ; done ; /bin/true )
 	$(SUDO) systemctl daemon-reload
 	$(SUDO) rm -f $(N2N)/.* && $(SUDO) rmdir $(N2N)
