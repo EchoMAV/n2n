@@ -46,7 +46,8 @@ edge(start=False)
 ## Command Line
 
 ```
-usage: configure.py [-h] [-A] [-a IP] [-c N] [-d DEV] [--enable] [-E] [-k N] [-l IP:PORT] [--start] [--version]
+usage: configure.py [-h] [-A] [-a IP] [-c N] [-d DEV] [--enable] [--interactive] [--mavnet PATH] [-E] [-k N] [-l IP:PORT]
+                    [--start] [--version]
 
 Configure N2N
 
@@ -57,6 +58,8 @@ optional arguments:
   -c N, --community N   Community name (default: None)
   -d DEV, --device DEV  TUN device (default: None)
   --enable              Enable EDGE service at boot (default: False)
+  --interactive         Interactive provisioning/verification (default: False)
+  --mavnet PATH         Use MAVNet configuration file to provision (default: None)
   -E, --multicast       Accept Multicast (default: False)
   -k N, --key N         Encryption Key (default: None)
   -l IP:PORT, --supernode IP:PORT

@@ -2,9 +2,9 @@
 '''
 Configure N2N
 '''
-import logging, os, subprocess
+import logging, os, subprocess, sys
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 logger = logging.getLogger(__name__)
 
@@ -127,15 +127,28 @@ def _auth(cid):
     psk = getpass.getpass('Enter Passphrase for N2N\n{}: '.format(cid),None)
     return psk
 
+def _input(prompt, default=None):
+    """Interactive entry w/prompt and default value"""
+    if default is None:
+        sys.stderr.write(prompt+': ')
+    else:
+        sys.stderr.write(prompt+' ({}): '.format(default))
+    u = input('')
+    return u if len(u)>0 else default
+
 if __name__ == "__main__":
-    from argparse import ArgumentParser
+    from argparse import ArgumentParser, SUPPRESS
+    import json
 
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('-A', '--aes', action='store_true', default=False, help='Use AES (default: %(default)s)')
     parser.add_argument('-a', '--address', metavar='IP', type=str, default=None, help='IP address of edge node (default: %(default)s)')
     parser.add_argument('-c', '--community', metavar='N', type=str, default=None, help='Community name (default: %(default)s)')
+    parser.add_argument(      '--debug', action='store_true', help=SUPPRESS, default=False)
     parser.add_argument('-d', '--device', metavar='DEV', type=str, default=None, help='TUN device (default: %(default)s)')
     parser.add_argument(      '--enable', action='store_true', default=False, help='Enable EDGE service at boot (default: %(default)s)')
+    parser.add_argument(      '--interactive', action='store_true', default=False, help='Interactive provisioning/verification (default: %(default)s)')
+    parser.add_argument(      '--mavnet', metavar='PATH', default=None, help='Use MAVNet configuration file to provision (default: %(default)s)')
     parser.add_argument('-E', '--multicast', action='store_true', default=False, help='Accept Multicast (default: %(default)s)')
     parser.add_argument('-k', '--key', metavar='N', type=str, default=None, help='Encryption Key (default: %(default)s)')
     parser.add_argument('-l', '--supernode', metavar='IP:PORT', type=str, default='52.222.1.20:1200', help='Supernode address:port (default: %(default)s)')
@@ -145,21 +158,69 @@ if __name__ == "__main__":
 
     # make logging work for more than just WARNINGS+
     fmt = '%(asctime)s:%(levelname)s:%(name)s:%(funcName)s:%(message)s'
-    logging.basicConfig(format=fmt,level=logging.INFO)
+    lvl = logging.DEBUG if args.debug else logging.INFO
+    logging.basicConfig(format=fmt,level=lvl)
 
+    # establish configuration (via MAVNet config, interactive or command line)
     d = {}
-    d['aes'] = args.aes
-    d['ip'] = args.address
-    d['cid'] = args.community
-    d['dev'] = args.device
-    d['enable'] = args.enable
-    d['multicast'] = args.multicast
-    d['psk'] = args.key
-    d['supernode'] = args.supernode
-    d['start'] = args.start
+    if args.mavnet is not None:
+        cfg = json.load(open(args.mavnet,'r'))
+        d['aes'] = False        # FIXME: needs to be True after testing
+        d['ip'] = cfg['los']['radio']['lan']['ip']
+        d['dev'] = 'edge0'
+        d['enable'] = cfg['los']['active']
+        d['multicast'] = True
+        d['psk'] = cfg['los']['radio']['password']
+        d['supernode'] = '52.222.1.20:1200' # TODO: to be added into provisioning file
+        d['start'] = False
+        config = os.path.sep.join(args.mavnet.split(os.path.sep)[0:-1])+os.path.sep+'config'
+        try:
+            # extract comm group
+            with open(config,'r') as f:
+                c = f.readline().strip().split(',')
+                d['cid'] = c[0].replace('\0','').strip()
+        except FileNotFoundError as e:
+            logging.error(str(e)+'\n')
+            if args.interactive:
+                d['cid'] = _input('Select MAVNet comm group')
+            else:
+                raise
 
-    if d['psk'] is None:
+        if args.interactive:
+            verify = '\nVerify Configuration:\n{}\nOK?'.format(json.dumps(d,indent=2))
+            ok = True if _input(verify, default='Yes') in ['y','yes','t','true'] else False
+            if not ok:
+                sys.exit(1)
+
+    elif args.interactive:
+        d['cid'] = _input('Choose N2N Community')
+        d['ip'] = _input('Choose N2N IPv4/netmask (e.g. 172.20.1.4/24)')
         d['psk'] = _auth(d['cid'])
+        d['supernode'] = _input('Choose Supernode', default='52.222.1.20:1200')
+        d['aes'] = True if _input('Use AES?', default='No').lower() in ['y','yes','t','true'] else False
+        d['multicast'] = True if _input('Enable Multicast?', default='No').lower() in ['y','yes','t','true'] else False
+        d['dev'] = _input('Choose TUN device and enable routing?', default=None)
+        d['enable'] = True if _input('Enable EDGE as service?', default='Yes').lower() in ['y','yes','t','true'] else False
+        d['start'] = True if _input('Start EDGE now?', default='Yes').lower() in ['y','yes','t','true'] else False
+
+        verify = '\nVerify Configuration:\n{}\nOK?'.format(json.dumps(d,indent=2))
+        ok = True if _input(verify, default='Yes') in ['y','yes','t','true'] else False
+        if not ok:
+            sys.exit(1)
+
+    else:
+        d['aes'] = args.aes
+        d['ip'] = args.address
+        d['cid'] = args.community
+        d['dev'] = args.device
+        d['enable'] = args.enable
+        d['multicast'] = args.multicast
+        d['psk'] = args.key
+        d['supernode'] = args.supernode
+        d['start'] = args.start
+
+        if d['psk'] is None:
+            d['psk'] = _auth(d['cid'])
 
     edge(**d)
 
