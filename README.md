@@ -124,5 +124,9 @@ sudo systemctl start edge
 These platforms are supported/tested:
 
  * Iris 2 R0/R1 based on:
+   - [x] [uvdl/debian-var](https://github.com/uvdl/debian-var/tree/iris2)
    - [ ] [uvdl/yocto-ornl](https://github.com/uvdl/yocto-ornl/tree/develop)
+ * Linux Workstations
    - [ ] [AWS/Ubuntu 18.04 LTS](https://code.ornl.gov/uvdl/general/tree/master/Devices/AWS)
+ * Raspberry PI
+   - [x] [Raspbian GNU/Linux 10 (buster)](https://www.raspberrypi.org/downloads/raspbian/)
