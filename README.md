@@ -76,6 +76,38 @@ sudo ./configure.py --address=172.20.5.20/24 --key="ThePassphrase" -c "TheConnec
 This will configure the system to connect to the VPN with the given address and 255.255.255.0 netmask.
 The service will be started and it will be setup to start on boot.
 
+### Use a MAVNet provisioning file to configure EDGE
+```
+./configure.py --mavnet ~/scripts/Sim9/FSIM000000000009.mav --interactive
+```
+
+Will produce (as an example):
+```
+Verify Configuration:
+{
+  "start": false,
+  "aes": false,
+  "dev": "edge0",
+  "ip": "172.20.5.9",
+  "cid": "sim",
+  "enable": false,
+  "supernode": "52.222.1.20:1200",
+  "multicast": true,
+  "psk": "xxxxxxxx"
+}
+OK? (Yes):
+```
+
+Press `ENTER` to accept the configuration and create the `/etc/n2n/edge.conf` file.
+
+*Observe that `enable` and `start` are `false` which means the EDGE service will not
+be enabled to start on boot.  This is from the config file indicating that the `LOS`
+device is disabled.  You can start the service manually or give the `--enable`/`--start` options.*
+```
+sudo systemctl enable edge
+sudo systemctl start edge
+```
+
 ## Files
 
  * `__init__.py` - support import

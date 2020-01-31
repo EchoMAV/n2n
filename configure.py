@@ -4,7 +4,7 @@ Configure N2N
 '''
 import logging, os, subprocess, sys
 
-__version__ = '0.3'
+__version__ = '0.3.1'
 
 logger = logging.getLogger(__name__)
 
@@ -168,11 +168,11 @@ if __name__ == "__main__":
         d['aes'] = False        # FIXME: needs to be True after testing
         d['ip'] = cfg['los']['radio']['lan']['ip']
         d['dev'] = 'edge0'
-        d['enable'] = cfg['los']['active']
+        d['enable'] = cfg['los']['active'] or args.enable
         d['multicast'] = True
         d['psk'] = cfg['los']['radio']['password']
         d['supernode'] = '52.222.1.20:1200' # TODO: to be added into provisioning file
-        d['start'] = False
+        d['start'] = args.start
         config = os.path.sep.join(args.mavnet.split(os.path.sep)[0:-1])+os.path.sep+'config'
         try:
             # extract comm group
