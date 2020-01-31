@@ -4,7 +4,7 @@ Configure N2N
 '''
 import logging, os, subprocess, sys
 
-__version__ = '0.3.1'
+__version__ = '0.3.2'
 
 logger = logging.getLogger(__name__)
 
@@ -166,13 +166,15 @@ if __name__ == "__main__":
     if args.mavnet is not None:
         cfg = json.load(open(args.mavnet,'r'))
         d['aes'] = False        # FIXME: needs to be True after testing
-        d['ip'] = cfg['los']['radio']['lan']['ip']
         d['dev'] = 'edge0'
         d['enable'] = cfg['los']['active'] or args.enable
         d['multicast'] = True
         d['psk'] = cfg['los']['radio']['password']
         d['supernode'] = '52.222.1.20:1200' # TODO: to be added into provisioning file
         d['start'] = args.start
+        # TODO: vpn convention is to use 172.20.x.y with x.y coming from LOS[IP]
+        los = cfg['los']['radio']['lan']['ip']
+        d['ip'] = '172.20.{}.{}'.format(los[2],los[3])
         config = os.path.sep.join(args.mavnet.split(os.path.sep)[0:-1])+os.path.sep+'config'
         try:
             # extract comm group
@@ -222,5 +224,6 @@ if __name__ == "__main__":
         if d['psk'] is None:
             d['psk'] = _auth(d['cid'])
 
+    logger.debug(str(d))
     edge(**d)
 
