@@ -43,6 +43,25 @@ edge(enable=True)
 edge(enable=False)
 ```
 
+## Command Line
+
+```
+usage: configure.py [-h] [--aes] [-a IP] [-c N] [-d DEV] [--enable] [-k N]
+                    [-l IP:PORT]
+
+Configure N2N
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --aes                 Use AES (default: False)
+  -a IP, --address IP   IP address of edge node (default: None)
+  -c N, --community N   Community name (default: None)
+  -d DEV, --device DEV  TAP device (default: None)
+  --enable              Enable EDGE (default: False)
+  -k N, --key N         Encryption Key (default: None)
+  -l IP:PORT, --supernode IP:PORT
+                        Supernode address:port (default: 52.222.1.20:1200)
+```
 
 ## Files
 
