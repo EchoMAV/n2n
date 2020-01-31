@@ -4,7 +4,7 @@ Configure N2N
 '''
 import logging, os, subprocess, sys
 
-__version__ = '0.3.3'
+__version__ = '0.3.4'
 
 logger = logging.getLogger(__name__)
 
@@ -173,7 +173,7 @@ if __name__ == "__main__":
         d['supernode'] = '52.222.1.20:1200' # TODO: to be added into provisioning file
         d['start'] = args.start
         # TODO: vpn convention is to use 172.20.x.y with x.y coming from LOS[IP]
-        los = cfg['los']['radio']['lan']['ip']
+        los = cfg['los']['radio']['lan']['ip'].split('.')
         d['ip'] = '172.20.{}.{}'.format(los[2],los[3])
         config = os.path.sep.join(args.mavnet.split(os.path.sep)[0:-1])+os.path.sep+'config'
         try:
