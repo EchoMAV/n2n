@@ -40,7 +40,7 @@ install: deps
 	$(MAKE) --no-print-directory $(EDGE)
 	$(MAKE) --no-print-directory restore-services
 
-provision: $(CONFIG)
+provision: $(CONFIG) $(N2N)
 	@if [ -e $(CONFIG)/$(SN).mav ] ; then \
 		$(SUDO) python3 configure.py --mavnet=$(CONFIG)/$(SN).mav --interactive ; \
 	else \
