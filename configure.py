@@ -4,7 +4,7 @@ Configure N2N
 '''
 import logging, os, subprocess, sys
 
-__version__ = '0.3.2'
+__version__ = '0.3.3'
 
 logger = logging.getLogger(__name__)
 
@@ -190,7 +190,7 @@ if __name__ == "__main__":
 
         if args.interactive:
             verify = '\nVerify Configuration:\n{}\nOK?'.format(json.dumps(d,indent=2))
-            ok = True if _input(verify, default='Yes') in ['y','yes','t','true'] else False
+            ok = True if _input(verify, default='Yes').lower() in ['y','yes','t','true'] else False
             if not ok:
                 sys.exit(1)
 
@@ -206,7 +206,7 @@ if __name__ == "__main__":
         d['start'] = True if _input('Start EDGE now?', default='Yes').lower() in ['y','yes','t','true'] else False
 
         verify = '\nVerify Configuration:\n{}\nOK?'.format(json.dumps(d,indent=2))
-        ok = True if _input(verify, default='Yes') in ['y','yes','t','true'] else False
+        ok = True if _input(verify, default='Yes').lower() in ['y','yes','t','true'] else False
         if not ok:
             sys.exit(1)
 
