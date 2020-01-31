@@ -4,7 +4,7 @@ Configure N2N
 '''
 import logging, os, subprocess, sys
 
-__version__ = '0.3.4'
+__version__ = '0.3.5'
 
 logger = logging.getLogger(__name__)
 
@@ -106,9 +106,10 @@ def edge(start: bool = False, cid: str = None, psk: str = None, ip: str = None, 
     with open(_ETC_N2N_EDGE_CONF_PATH,'w') as f:
         for k in conf:
             if conf[k] is not None:
-                f.write('-'+k+'='+conf[k]+'\n')
-            else:
-                f.write('-'+k+'\n')
+                if len(conf[k])>0:
+                    f.write('-'+k+'='+conf[k]+'\n')
+                else:
+                    f.write('-'+k+'\n')
 
     enable = kwargs.get('enable', False)
     _syscall('systemctl {} edge'.format('enable' if enable else 'disable'))
