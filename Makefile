@@ -10,13 +10,11 @@ EDGE=/usr/sbin/edge
 LIBSYSTEMD=/lib/systemd/system
 NTOP=https://github.com/ntop
 N2N=/etc/n2n
-PKGDEPS=host tcpdump libssl-dev libpcap-dev
+PKGDEPS=host nmap tcpdump libssl-dev libpcap-dev
 PYTHONPKGS=
-SERVICES_DISABLE=
-SERVICES_ENABLE=edge.service
-SERVICES=$(SERVICES_DISABLE) $(SERVICES_ENABLE)
+SERVICES=edge.service
 
-.PHONY = clean deps install provision restore-services uninstall update
+.PHONY = clean deps enable install provision see test uninstall update
 
 $(N2N): config
 	@$(SUDO) mkdir -p $@
@@ -32,13 +30,19 @@ clean:
 	@if [ -d src ] ; then cd src && make clean ; fi
 
 deps: src
-	$(SUDO) apt-get update
-	$(SUDO) apt-get install -y $(PKGDEPS)
-	#$(SUDO) pip3 install ${PYTHONPKGS}
+	# NB: only needed when PKGDEPS, PYTHONPKGS is not empty
+	@if [ ! -z "$(PKGDEPS)" ] ; then $(SUDO) apt-get update && $(SUDO) apt-get install -y $(PKGDEPS) ; fi
+	@if [ ! -z "$(PYTHONPKGS)" ] ; then $(SUDO) pip3 install $(PYTHONPKGS) ; fi
+
+enable:
+	@( for c in stop disable ; do $(SUDO) systemctl $${c} $(SERVICES) ; done ; true )
+	@( for s in $(SERVICES) ; do $(SUDO) install -Dm644 scripts/$${s%.*}.service $(LIBSYSTEMD)/$${s%.*}.service ; done ; true )
+	$(SUDO) systemctl daemon-reload
+	@( for s in $(SERVICES) ; do $(SUDO) systemctl enable $${s%.*} ; done ; true )
 
 install: deps
-	$(MAKE) --no-print-directory $(EDGE)
-	$(MAKE) --no-print-directory restore-services
+	@$(MAKE) --no-print-directory $(EDGE)
+	@$(MAKE) --no-print-directory enable
 
 provision: $(CONFIG) $(N2N)
 	@if [ -e $(CONFIG)/$(SN).mav ] ; then \
@@ -47,18 +51,21 @@ provision: $(CONFIG) $(N2N)
 		$(SUDO) python3 configure.py --interactive --start ; \
 	fi
 
-restore-services:
-	@( for s in $(SERVICES) ; do $(SUDO) systemctl disable $$s ; done ; /bin/true )
-	@( for s in $(SERVICES_ENABLE) ; do $(SUDO) install -Dm644 $$s $(LIBSYSTEMD)/$$s ; done ; /bin/true )
-	$(SUDO) systemctl daemon-reload
-	@( for s in $(SERVICES_ENABLE) ; do $(SUDO) systemctl enable $$s ; done ; /bin/true )
+see:
+	cat $(N2N)/edge.conf
+
+test:
+	@if [ -e $(N2N)/edge.conf ] ; then \
+		DEV=$(shell grep ^-d $(N2N)/edge.conf | cut -f2 -d=) ; \
+		ADR := $(shell ip -o -f inet addr show $$DEV | tr -s [:space:] | cut -s -f4 -d' ') ; \
+		nmap -sP $$ADR ; \
+	fi
 
 uninstall:
-	@( for s in $(SERVICES) ; do $(SUDO) systemctl disable $$s ; $(SUDO) systemctl stop $$s ; done ; /bin/true )
-	@( for s in $(SERVICES) ; do $(SUDO) rm -f $(LIBSYSTEMD)/$$s ; done ; /bin/true )
+	@( for c in stop disable ; do $(SUDO) systemctl $${c} $(SERVICES) ; done ; true )
+	@( for s in $(SERVICES) ; do $(SUDO) rm $(LIBSYSTEMD)/$${s%.*}.service ; done ; true )
 	$(SUDO) systemctl daemon-reload
 	$(SUDO) rm -f $(N2N)/.* && $(SUDO) rmdir $(N2N)
 
 update:
 	@cd src && git pull
-
