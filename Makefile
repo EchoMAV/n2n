@@ -37,7 +37,7 @@ deps: src
 enable:
 	@( for c in stop disable ; do $(SUDO) systemctl $${c} $(SERVICES) ; done ; true )
 	@( for s in $(SERVICES) ; do $(SUDO) install -Dm644 scripts/$${s%.*}.service $(LIBSYSTEMD)/$${s%.*}.service ; done ; true )
-	$(SUDO) systemctl daemon-reload
+	@if [ ! -z "$(SERVICES)" ] ; then $(SUDO) systemctl daemon-reload ; fi
 	@( for s in $(SERVICES) ; do $(SUDO) systemctl enable $${s%.*} ; done ; true )
 
 install: deps
@@ -64,7 +64,7 @@ test:
 uninstall:
 	@( for c in stop disable ; do $(SUDO) systemctl $${c} $(SERVICES) ; done ; true )
 	@( for s in $(SERVICES) ; do $(SUDO) rm $(LIBSYSTEMD)/$${s%.*}.service ; done ; true )
-	$(SUDO) systemctl daemon-reload
+	@if [ ! -z "$(SERVICES)" ] ; then $(SUDO) systemctl daemon-reload ; fi
 	$(SUDO) rm -f $(N2N)/.* && $(SUDO) rmdir $(N2N)
 
 update:
