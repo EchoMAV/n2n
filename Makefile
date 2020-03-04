@@ -40,7 +40,7 @@ enable:
 	@if [ ! -z "$(SERVICES)" ] ; then $(SUDO) systemctl daemon-reload ; fi
 	@( for s in $(SERVICES) ; do $(SUDO) systemctl enable $${s%.*} ; done ; true )
 
-install: deps
+install: deps $(N2N)
 	@$(MAKE) --no-print-directory $(EDGE)
 	@$(MAKE) --no-print-directory enable
 
