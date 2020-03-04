@@ -31,7 +31,7 @@ clean:
 
 deps: src
 	# NB: only needed when PKGDEPS, PYTHONPKGS is not empty
-	@if [ ! -z "$(PKGDEPS)" ] ; then $(SUDO) apt-get update && $(SUDO) apt-get install -y $(PKGDEPS) ; fi
+	@if [ ! -z "$(PKGDEPS)" ] ; then $(SUDO) apt-get install -y $(PKGDEPS) ; fi
 	@if [ ! -z "$(PYTHONPKGS)" ] ; then $(SUDO) pip3 install $(PYTHONPKGS) ; fi
 
 enable:
