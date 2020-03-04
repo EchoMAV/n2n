@@ -36,7 +36,7 @@ deps: src
 
 enable:
 	@( for c in stop disable ; do $(SUDO) systemctl $${c} $(SERVICES) ; done ; true )
-	@( for s in $(SERVICES) ; do $(SUDO) install -Dm644 scripts/$${s%.*}.service $(LIBSYSTEMD)/$${s%.*}.service ; done ; true )
+	@( for s in $(SERVICES) ; do $(SUDO) install -Dm644 $${s%.*}.service $(LIBSYSTEMD)/$${s%.*}.service ; done ; true )
 	@if [ ! -z "$(SERVICES)" ] ; then $(SUDO) systemctl daemon-reload ; fi
 	@( for s in $(SERVICES) ; do $(SUDO) systemctl enable $${s%.*} ; done ; true )
 
