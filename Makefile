@@ -10,7 +10,7 @@ EDGE=/usr/sbin/edge
 LIBSYSTEMD=/lib/systemd/system
 NTOP=https://github.com/ntop
 N2N=/etc/n2n
-PKGDEPS=host nmap tcpdump libssl-dev libpcap-dev
+PKGDEPS ?= host nmap tcpdump libssl-dev libpcap-dev
 PYTHONPKGS=
 SERVICES=edge.service
 
