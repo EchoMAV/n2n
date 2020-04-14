@@ -201,8 +201,8 @@ if __name__ == "__main__":
         d['psk'] = _auth(d['cid'])
         d['supernode'] = _input('Choose Supernode', default='52.222.1.20:1200')
         d['aes'] = True if _input('Use AES?', default='No').lower() in ['y','yes','t','true'] else False
-        d['multicast'] = True if _input('Enable Multicast?', default='No').lower() in ['y','yes','t','true'] else False
-        d['dev'] = _input('Choose TUN device and enable routing?', default=None)
+        d['multicast'] = True if _input('Enable Multicast?', default='Yes').lower() in ['y','yes','t','true'] else False
+        d['dev'] = _input('Choose TUN device and enable routing?', default='edge0')
         d['enable'] = True if _input('Enable EDGE as service?', default='Yes').lower() in ['y','yes','t','true'] else False
         d['start'] = True if _input('Start EDGE now?', default='Yes').lower() in ['y','yes','t','true'] else False
 
