@@ -29,7 +29,7 @@ $(EDGE): ./src
 clean:
 	@if [ -d src ] ; then cd src && make clean ; fi
 
-deps: src
+deps:
 	# NB: only needed when PKGDEPS, PYTHONPKGS is not empty
 	@if [ ! -z "$(PKGDEPS)" ] ; then $(SUDO) apt-get install -y $(PKGDEPS) ; fi
 	@if [ ! -z "$(PYTHONPKGS)" ] ; then $(SUDO) pip3 install $(PYTHONPKGS) ; fi
@@ -40,7 +40,7 @@ enable:
 	@if [ ! -z "$(SERVICES)" ] ; then $(SUDO) systemctl daemon-reload ; fi
 	@( for s in $(SERVICES) ; do $(SUDO) systemctl enable $${s%.*} ; done ; true )
 
-install: deps $(N2N)
+install: src $(N2N)
 	@$(MAKE) --no-print-directory $(EDGE)
 	@$(MAKE) --no-print-directory enable
 
