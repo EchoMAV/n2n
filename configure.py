@@ -104,8 +104,8 @@ def edge(start: bool = False, cid: str = None, psk: str = None, ip: str = None, 
         conf['E'] = ''      # cause emission of '-E'
 
     # https://bugs.python.org/issue29214
-    fd = os.open(_EDGE_CONF_PATH, os.O_CREAT, 0o027)
-    with open(fd, 'w') as f:
+    os.umask(0o027)
+    with open(_EDGE_CONF_PATH, 'w') as f:
         for k in conf:
             if conf[k] is not None:
                 if len(conf[k])>0:
