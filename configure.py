@@ -103,7 +103,9 @@ def edge(start: bool = False, cid: str = None, psk: str = None, ip: str = None, 
     if multicast:
         conf['E'] = ''      # cause emission of '-E'
 
-    with os.open(_ETC_N2N_EDGE_CONF_PATH, os.O_CREAT, 0o027) as f:
+    # https://bugs.python.org/issue29214
+    fd = os.open(_ETC_N2N_EDGE_CONF_PATH, os.O_CREAT, 0o027)
+    with open(fd, 'w') as f:
         for k in conf:
             if conf[k] is not None:
                 if len(conf[k])>0:
