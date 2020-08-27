@@ -103,7 +103,7 @@ Verify Configuration:
 OK? (Yes):
 ```
 
-Press `ENTER` to accept the configuration and create the `/etc/n2n/edge.conf` file.
+Press `ENTER` to accept the configuration and create the `/etc/systemd/edge.conf` file.
 
 *Observe that `enable` and `start` are `false` which means the EDGE service will not
 be enabled to start on boot.  This is from the config file indicating that the `LOS`

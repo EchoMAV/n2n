@@ -8,9 +8,9 @@ __version__ = '0.3.6'
 
 logger = logging.getLogger(__name__)
 
-# /etc/n2n/edge.conf
+# /etc/systemd/edge.conf
 # Fill in template as needed and write configuration file
-_ETC_N2N_EDGE_CONF_PATH = os.path.join(os.path.sep,'etc','n2n','edge.conf')
+_ETC_N2N_EDGE_CONF_PATH = os.path.join(os.path.sep,'etc','systemd','edge.conf')
 _ETC_N2N_EDGE_CONF = {
     'd':'edge0',
     'c':'',
