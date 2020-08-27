@@ -176,9 +176,9 @@ if __name__ == "__main__":
         d['psk'] = cfg['los']['radio']['password']
         d['supernode'] = '52.222.1.20:1200' # TODO: to be added into provisioning file
         d['start'] = args.start
-        # TODO: vpn convention is to use 172.20.x.y with x.y coming from LOS[IP]
-        los = cfg['los']['radio']['lan']['ip'].split('.')
-        d['ip'] = '172.20.{}.{}'.format(los[2],los[3])
+        # TODO: vpn convention is to use 172.22.x.y with x.y coming from LOS[RADIO][DHCP][START]
+        los = cfg['los']['radio']['dhcp']['lan']['start'].split('.')
+        d['ip'] = '172.22.{}.{}'.format(los[2],los[3])
         config = os.path.sep.join(args.mavnet.split(os.path.sep)[0:-1])+os.path.sep+'config'
         try:
             # extract comm group
