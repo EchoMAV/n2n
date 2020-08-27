@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 # /etc/systemd/edge.conf
 # Fill in template as needed and write configuration file
-_ETC_N2N_EDGE_CONF_PATH = os.path.join(os.path.sep,'etc','systemd','edge.conf')
-_ETC_N2N_EDGE_CONF = {
+_EDGE_CONF_PATH = os.path.join(os.path.sep,'etc','systemd','edge.conf')
+_EDGE_CONF = {
     'd':'edge0',
     'c':'',
     'k':'',
@@ -77,7 +77,7 @@ def edge(start: bool = False, cid: str = None, psk: str = None, ip: str = None, 
             _syscall('systemctl start edge')
         return
 
-    conf = _ETC_N2N_EDGE_CONF.copy()
+    conf = _EDGE_CONF.copy()
 
     conf['c'] = cid
     conf['k'] = psk
@@ -104,7 +104,7 @@ def edge(start: bool = False, cid: str = None, psk: str = None, ip: str = None, 
         conf['E'] = ''      # cause emission of '-E'
 
     # https://bugs.python.org/issue29214
-    fd = os.open(_ETC_N2N_EDGE_CONF_PATH, os.O_CREAT, 0o027)
+    fd = os.open(_EDGE_CONF_PATH, os.O_CREAT, 0o027)
     with open(fd, 'w') as f:
         for k in conf:
             if conf[k] is not None:
