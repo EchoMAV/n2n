@@ -4,7 +4,7 @@ Configure N2N
 '''
 import logging, os, subprocess, sys
 
-__version__ = '0.3.6'
+__version__ = '0.3.7'
 
 logger = logging.getLogger(__name__)
 
