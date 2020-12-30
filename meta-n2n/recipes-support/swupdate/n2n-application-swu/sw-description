@@ -1,0 +1,24 @@
+software =
+{
+	version = "0.1.0";
+
+	var-som-mx6-ornl = {
+		hardware-compatibility: [ "1.0" ];
+
+		files: (
+			{
+				filename = "n2n-application.tar.gz";
+				type = "archive";
+				compressed = true;
+				path = "/tmp/data";
+			}
+		);
+
+		scripts: (
+			{
+				filename = "n2n-update.sh";
+				type = "shellscript";
+			}
+		);
+	};
+}
