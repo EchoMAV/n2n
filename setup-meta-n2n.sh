@@ -74,12 +74,12 @@ function create_recipe_tarball
     OLD_LOCATION=$PWD
     eval cd $REPO_DIR
 
-    tar --exclude="*.tar.gz" --exclude=".git" --exclude=".gitignore" -czf n2n-application.tar.gz ./
+    tar --exclude="*.tar.gz" --exclude=".git" --exclude=".gitignore" -czf n2n.tar.gz ./
     # copy tarball to the file dependency folder for the swu recipe
-    cp n2n-application.tar.gz ../meta-n2n/recipes-support/swupdate/n2n-application-swu/
+    cp n2n.tar.gz ../meta-n2n/recipes-support/swupdate/n2n-application-swu/
     # also need it in the mission-application recipe
     mkdir -p ../meta-n2n/recipes-n2n/n2n/files/
-    cp n2n-application.tar.gz ../meta-n2n/recipes-n2n/n2n/files/
+    cp n2n.tar.gz ../meta-n2n/recipes-n2n/n2n/files/
 
     eval cd $OLD_LOCATION
 }

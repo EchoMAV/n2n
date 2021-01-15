@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 
 FILESEXTRAPATH_prepend := "${THISDIR}/${PN}:"
 
-SRC_URI = "file://n2n-application.tar.gz"
+SRC_URI = "file://n2n.tar.gz"
 
 RDEPENDS_${PN} += " bash python3-bottle python3-pyserial"
 
