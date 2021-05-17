@@ -16,7 +16,8 @@ _EDGE_CONF = {
     'c':'',
     'k':'',
     'a':'',
-    'l':'52.222.1.20:1200', # supernode (video.mavnet.online port 1200)
+    'n':'',
+    'l':'video.horizon31.com:1935', # supernode (video.mavnet.online port 1200)
     'r':None,
 }
 _DEFAULT_SUPERNODE_PORT = 1200
@@ -82,6 +83,8 @@ def edge(start: bool = False, cid: str = None, psk: str = None, ip: str = None, 
     conf['c'] = cid
     conf['k'] = psk
     conf['a'] = ip
+    routing = kwargs.get('routing', None)
+    conf['n'] = routing
     if conf['a'].rfind('/') >= 0:
         ip,mask = _cidr_to_netmask(conf['a'])
         conf['a'] = ip
@@ -176,6 +179,7 @@ if __name__ == "__main__":
         d['psk'] = cfg['los']['radio']['password']
         d['supernode'] = '52.222.1.20:1200' # TODO: to be added into provisioning file
         d['start'] = args.start
+        d['routing'] = '225.0.0.0/8:0.0.0.0'
         # TODO: vpn convention is to use 172.22.x.y with x.y coming from LOS[RADIO][DHCP][START]
         los = cfg['los']['radio']['dhcp']['lan']['start'].split('.')
         d['ip'] = '172.22.{}.{}'.format(los[2],los[3])
@@ -200,14 +204,15 @@ if __name__ == "__main__":
 
     elif args.interactive:
         d['cid'] = _input('Choose N2N Community')
-        d['ip'] = _input('Choose N2N IPv4/netmask (e.g. 172.20.1.4/24)')
+        d['ip'] = _input('Choose N2N IPv4/netmask (e.g. 172.20.1.4/16)')
         d['psk'] = _auth(d['cid'])
-        d['supernode'] = _input('Choose Supernode', default='52.222.1.20:1200')
+        d['supernode'] = _input('Choose Supernode', default='video.horizon31.com:7777')
         d['aes'] = True if _input('Use AES?', default='No').lower() in ['y','yes','t','true'] else False
         d['multicast'] = True if _input('Enable Multicast?', default='Yes').lower() in ['y','yes','t','true'] else False
         d['dev'] = _input('Choose TUN device and enable routing?', default='edge0')
         d['enable'] = True if _input('Enable EDGE as service?', default='Yes').lower() in ['y','yes','t','true'] else False
         d['start'] = True if _input('Start EDGE now?', default='Yes').lower() in ['y','yes','t','true'] else False
+        d['routing'] = '225.0.0.0/8:0.0.0.0'
 
         verify = '\nVerify Configuration:\n{}\nOK?'.format(json.dumps(d,indent=2))
         ok = True if _input(verify, default='Yes').lower() in ['y','yes','t','true'] else False
@@ -224,6 +229,7 @@ if __name__ == "__main__":
         d['psk'] = args.key
         d['supernode'] = args.supernode
         d['start'] = args.start
+        d['routing'] = '225.0.0.0/8:0.0.0.0'
 
         if d['psk'] is None:
             d['psk'] = _auth(d['cid'])
