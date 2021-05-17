@@ -128,5 +128,7 @@ These platforms are supported/tested:
    - [ ] [uvdl/yocto-ornl](https://github.com/uvdl/yocto-ornl/tree/develop)
  * Linux Workstations
    - [ ] [AWS/Ubuntu 18.04 LTS](https://code.ornl.gov/uvdl/general/tree/master/Devices/AWS)
+ * Jetson Nano
+   - [x] [JetPack 4.5.1]
  * Raspberry PI
    - [x] [Raspbian GNU/Linux 10 (buster)](https://www.raspberrypi.org/downloads/raspbian/)
