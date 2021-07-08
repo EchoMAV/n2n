@@ -34,6 +34,21 @@ This will enter into an interactive session to help you setup your VPN.
 4. run edge.exe AS ADMINISTRATOR  
 note: you may need to edit the interface name to "edge0" or edit the -d parameter in edge.conf to match the interface name  
 
+current functional edge.conf  
+```
+-d=edge0
+-c=h31network
+-k=horizon31
+# supernode IP address
+-l=turn.mavnet.online:7777
+-r
+# edge IP address
+-a=172.20.169.215  <edit as needed>
+# netmask
+-s=255.255.0.0
+-E
+-A1
+```
 
 ## Python Usage:
 
