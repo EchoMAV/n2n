@@ -14,7 +14,7 @@ cd $HOME
 git clone https://code.ornl.gov/uvdl/n2n.git
 ```
 
-provide your UCAMS/XCAMS credentials, then continue:
+provide your credentials, then continue:
 ```
 make -C $HOME/n2n install
 ```
