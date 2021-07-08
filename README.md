@@ -28,10 +28,10 @@ make -C $HOME/n2n provision
 This will enter into an interactive session to help you setup your VPN.
 
 ## To run on windows
-Install TAP from: http://build.openvpn.net/downloads/releases/tap-windows-9.21.0.exe
-Download compiled edge for windows [N2N_Windows_Edge_2.8.0.zip](https://github.com/horiz31/n2n/files/6784606/N2N_Windows_Edge_2.8.0.zip)  
-edit edge.conf  
-run edge.exe AS ADMINISTRATOR  
+1. Install TAP from: http://build.openvpn.net/downloads/releases/tap-windows-9.21.0.exe  
+2. Download compiled edge for windows [N2N_Windows_Edge_2.8.0.zip](https://github.com/horiz31/n2n/files/6784606/N2N_Windows_Edge_2.8.0.zip)  
+3. edit edge.conf  
+4. run edge.exe AS ADMINISTRATOR  
 note: you may need to edit the interface name to "edge0" or edit the -d parameter in edge.conf to match the interface name  
 
 
