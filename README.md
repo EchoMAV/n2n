@@ -1,5 +1,5 @@
 # N2N Edge Node API
-Desktop/Server Implementation of N2N VPN
+Implementation of N2N VPN
 
 ## Dependencies
 
@@ -14,7 +14,7 @@ cd $HOME
 git clone https://code.ornl.gov/uvdl/n2n.git
 ```
 
-provide your UCAMS/XCAMS credentials, then continue:
+provide your credentials, then continue:
 ```
 make -C $HOME/n2n install
 ```
@@ -27,7 +27,30 @@ make -C $HOME/n2n provision
 
 This will enter into an interactive session to help you setup your VPN.
 
-## Usage:
+## To run on windows
+1. Install TAP from: http://build.openvpn.net/downloads/releases/tap-windows-9.24.2-I601-Win10.exe
+2. Download compiled edge for windows [N2N_Windows_Edge_2.8.0.zip](https://github.com/horiz31/n2n/files/6784606/N2N_Windows_Edge_2.8.0.zip)  
+3. edit edge.conf  
+4. run edge.exe from command prompt AS ADMINISTRATOR  
+note: you may need to edit the interface name to "edge0" or edit the -d parameter in edge.conf to match the interface name  
+
+current functional edge.conf  
+```
+-d=edge0
+-c=h31network
+-k=horizon31
+# supernode IP address
+-l=video.horizon31.com:7777
+-r
+# edge IP address
+-a=172.21.X.Y  <edit as needed,convention is to make the last two octets match the system's eth0 address>
+# netmask
+-s=255.255.0.0
+-E
+-A1
+```
+
+## Python Usage:
 
 ```python
 from n2n import edge, edge_active
@@ -128,5 +151,7 @@ These platforms are supported/tested:
    - [ ] [uvdl/yocto-ornl](https://github.com/uvdl/yocto-ornl/tree/develop)
  * Linux Workstations
    - [ ] [AWS/Ubuntu 18.04 LTS](https://code.ornl.gov/uvdl/general/tree/master/Devices/AWS)
+ * Jetson Nano
+   - [x] [JetPack 4.5.1]
  * Raspberry PI
    - [x] [Raspbian GNU/Linux 10 (buster)](https://www.raspberrypi.org/downloads/raspbian/)
