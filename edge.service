@@ -4,9 +4,11 @@ After=network-online.target syslog.target nfw.target
 Wants=network-online.target
 
 [Service]
-Type=simple
+Type=forking
 ExecStartPre=
-ExecStart=/usr/sbin/edge /etc/systemd/edge.conf -f
+ExecStart=/usr/local/bin/start-edge.sh
+StandardOuput=journal
+StandardError=journal
 Restart=on-abnormal
 RestartSec=5
 

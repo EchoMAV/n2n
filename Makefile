@@ -8,6 +8,8 @@ SUDO := $(shell test $${EUID} -ne 0 && echo "sudo")
 CONFIG ?= /var/local
 EDGE=/usr/sbin/edge
 LIBSYSTEMD=/lib/systemd/system
+LOCAL=/usr/local
+LOCAL_SCRIPTS=start-edge.sh
 N2N_REPO=https://github.com/ntop/n2n.git
 N2N_REV=2.8
 PKGDEPS ?= host nmap tcpdump libssl-dev libpcap-dev
@@ -62,7 +64,8 @@ enable:
 install: config
 	@$(MAKE) --no-print-directory $(EDGE)
 	@$(SUDO) install -Dm644 config/supernodes.list $(SYSCFG)/supernodes.list
-	@$(MAKE) --no-print-directory enable
+	@for s in $(LOCAL_SCRIPTS) ; do $(SUDO) install -Dm755 $${s} $(LOCAL)/bin/$${s} ; done
+        @$(MAKE) --no-print-directory enable
 
 provision:
 	@if [ -e $(CONFIG)/$(SN).mav ] ; then \
