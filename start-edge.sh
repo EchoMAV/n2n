@@ -8,6 +8,7 @@ sleep 5
 if systemctl is-active --quiet video ; then
   echo "Video service is running, starting edge video stream" 
   gst-client pipeline_play edge
+  gst-client pipeline_play audio_edge
 else
   echo "Video service is not running, so not starting edge stream"
 fi
