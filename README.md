@@ -11,7 +11,7 @@ To perform an initial install, establish an internet connection and clone the re
 You will issue the following commands:
 ```
 cd $HOME
-git clone https://github.com/horiz3l/n2n.git
+git clone https://github.com/horiz31/n2n.git
 ```
 
 provide your credentials, then continue:
