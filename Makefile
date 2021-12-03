@@ -65,8 +65,8 @@ install: config
 	@$(MAKE) --no-print-directory $(EDGE)
 	@$(SUDO) install -Dm644 config/supernodes.list $(SYSCFG)/supernodes.list
 	@for s in $(LOCAL_SCRIPTS) ; do $(SUDO) install -Dm755 $${s} $(LOCAL)/bin/$${s} ; done
-	@$(MAKE) --no-print-directory provision
 	@$(MAKE) --no-print-directory enable
+	@$(MAKE) --no-print-directory provision
 
 provision:
 	@if [ -e $(CONFIG)/$(SN).mav ] ; then \
