@@ -1,0 +1,43 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	//
+$(EDGE)	Makefile	/^$(EDGE): .\/src$/;"	t
+./src	Makefile	/^.\/src:$/;"	t
+.PHONY	Makefile	/^.PHONY = clean dependencies enable install provision see test uninstall update$/;"	m
+CONFIG	Makefile	/^CONFIG ?= \/var\/local$/;"	m
+EDGE	Makefile	/^EDGE=\/usr\/sbin\/edge$/;"	m
+EULA	Makefile	/^EULA=1	# https:\/\/patchwork.openembedded.org\/patch\/100815\/$/;"	m
+LIBSYSTEMD	Makefile	/^LIBSYSTEMD=\/lib\/systemd\/system$/;"	m
+LOCAL	Makefile	/^LOCAL=\/usr\/local$/;"	m
+LOCAL_SCRIPTS	Makefile	/^LOCAL_SCRIPTS=start-edge.sh$/;"	m
+MACHINE	Makefile	/^MACHINE=var-som-mx6-ornl$/;"	m
+N2N_REPO	Makefile	/^N2N_REPO=https:\/\/github.com\/ntop\/n2n.git$/;"	m
+N2N_REV	Makefile	/^N2N_REV=2.8$/;"	m
+PKGDEPS	Makefile	/^PKGDEPS ?= host nmap tcpdump libssl-dev libpcap-dev$/;"	m
+PROJECT	Makefile	/^PROJECT=yocto-ornl$/;"	m
+PYTHONPKGS	Makefile	/^PYTHONPKGS=$/;"	m
+SERVICES	Makefile	/^SERVICES=edge.service$/;"	m
+SHELL	Makefile	/^SHELL := \/bin\/bash$/;"	m
+SN	Makefile	/^SN := $(shell hostname)$/;"	m
+SUDO	Makefile	/^SUDO := $(shell test $${EUID} -ne 0 && echo "sudo")$/;"	m
+SYSCFG	Makefile	/^SYSCFG=\/etc\/systemd$/;"	m
+YOCTO_DIR	Makefile	/^YOCTO_DIR := $(HOME)\/$(PROJECT)-$(YOCTO_VERSION)$/;"	m
+YOCTO_DISTRO	Makefile	/^YOCTO_DISTRO=fslc-framebuffer$/;"	m
+YOCTO_ENV	Makefile	/^YOCTO_ENV=build_ornl$/;"	m
+YOCTO_VERSION	Makefile	/^YOCTO_VERSION=thud$/;"	m
+build-n2n	Makefile	/^build-n2n:$/;"	t
+clean	Makefile	/^clean:$/;"	t
+default	Makefile	/^default:$/;"	t
+dependencies	Makefile	/^dependencies:$/;"	t
+disable	Makefile	/^disable:$/;"	t
+enable	Makefile	/^enable:$/;"	t
+install	Makefile	/^install: config$/;"	t
+provision	Makefile	/^provision:$/;"	t
+see	Makefile	/^see:$/;"	t
+test	Makefile	/^test:$/;"	t
+uninstall	Makefile	/^uninstall:$/;"	t
+update	Makefile	/^update:$/;"	t

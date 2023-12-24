@@ -17,7 +17,7 @@ _EDGE_CONF = {
     'k':'',
     'a':'',
     'n':'',
-    'l':'video.horizon31.com:1935', # supernode (video.mavnet.online port 1200)
+    'l':'data.echomav.com:1200', # supernode (video.mavnet.online port 1200)
     'r':None,
 }
 _DEFAULT_SUPERNODE_PORT = 1200
@@ -85,10 +85,10 @@ def edge(start: bool = False, cid: str = None, psk: str = None, ip: str = None, 
     conf['a'] = ip
     routing = kwargs.get('routing', None)
     conf['n'] = routing
-    if conf['a'].rfind('/') >= 0:
-        ip,mask = _cidr_to_netmask(conf['a'])
-        conf['a'] = ip
-        conf['s'] = mask    # cause emission of -s=xxx.xxx.xxx.xxx
+    #if conf['a'].rfind('/') >= 0:
+    #    ip,mask = _cidr_to_netmask(conf['a'])
+    #    conf['a'] = ip
+    #    conf['s'] = mask    # cause emission of -s=xxx.xxx.xxx.xxx
     if dev is not None:
         conf['d'] = dev
         conf['r'] = ''      # cause emission of '-r'
@@ -206,7 +206,7 @@ if __name__ == "__main__":
         d['cid'] = _input('Choose N2N Community')
         d['ip'] = _input('Choose N2N IPv4/netmask (e.g. 172.21.x.y/16)')
         d['psk'] = _auth(d['cid'])
-        d['supernode'] = _input('Choose Supernode', default='video.horizon31.com:7777')
+        d['supernode'] = _input('Choose Supernode', default='data.echomav.com:1200')
         d['aes'] = True if _input('Use AES?', default='No').lower() in ['y','yes','t','true'] else False
         d['multicast'] = True if _input('Enable Multicast?', default='Yes').lower() in ['y','yes','t','true'] else False
         d['dev'] = _input('Choose TUN device and enable routing?', default='edge0')

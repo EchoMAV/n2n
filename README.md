@@ -11,7 +11,7 @@ To perform an initial install, establish an internet connection and clone the re
 You will issue the following commands:
 ```
 cd $HOME
-git clone https://github.com/horiz31/n2n.git
+git clone https://github.com/echomav/n2n.git
 ```
 
 provide your credentials, then continue:
@@ -29,7 +29,7 @@ This will enter into an interactive session to help you setup your VPN.
 
 ## To run on windows
 1. Install TAP from: http://build.openvpn.net/downloads/releases/tap-windows-9.24.2-I601-Win10.exe
-2. Download compiled edge for windows [N2N_Windows_Edge_2.8.0.zip](https://github.com/horiz31/n2n/files/6784606/N2N_Windows_Edge_2.8.0.zip)  
+2. Download compiled edge for windows [N2N_Windows_Edge_3.1.1.zip]()  
 3. edit edge.conf  
 4. run edge.exe from command prompt AS ADMINISTRATOR  
 note: you may need to edit the interface name to "edge0" or edit the -d parameter in edge.conf to match the interface name  
@@ -37,10 +37,10 @@ note: you may need to edit the interface name to "edge0" or edit the -d paramete
 current functional edge.conf  
 ```
 -d=edge0
--c=h31network
--k=horizon31
+-c=echomavnetwork
+-k=echopilot
 # supernode IP address
--l=video.horizon31.com:7777
+-l=data.echomav.com:1200
 -r
 # edge IP address
 -a=172.21.X.Y  <edit as needed,convention is to make the last two octets match the system's eth0 address>

@@ -11,20 +11,11 @@ LIBSYSTEMD=/lib/systemd/system
 LOCAL=/usr/local
 LOCAL_SCRIPTS=start-edge.sh
 N2N_REPO=https://github.com/ntop/n2n.git
-N2N_REV=2.8
+N2N_REV=3.1.1
 PKGDEPS ?= host nmap tcpdump libssl-dev libpcap-dev
 PYTHONPKGS=
 SERVICES=edge.service
 SYSCFG=/etc/systemd
-
-# Yocto environment integration
-EULA=1	# https://patchwork.openembedded.org/patch/100815/
-MACHINE=var-som-mx6-ornl
-PROJECT=yocto-ornl
-YOCTO_VERSION=thud
-YOCTO_DIR := $(HOME)/$(PROJECT)-$(YOCTO_VERSION)
-YOCTO_DISTRO=fslc-framebuffer
-YOCTO_ENV=build_ornl
 
 .PHONY = clean dependencies enable install provision see test uninstall update
 
@@ -94,11 +85,4 @@ uninstall:
 update:
 	@cd src && git pull
 
-build-n2n:
-	rm -rf $(YOCTO_DIR)/sources/meta-n2n
-	./setup-meta-n2n.sh -b $(YOCTO_DIR)
-	@cd $(YOCTO_DIR) && \
-		MACHINE=$(MACHINE) DISTRO=$(YOCTO_DISTRO) EULA=$(EULA) . setup-environment $(YOCTO_ENV) && \
-		cd $(YOCTO_DIR)/$(YOCTO_ENV) && \
-		bitbake-layers add-layer ../sources/meta-n2n
 
