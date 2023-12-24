@@ -43,9 +43,7 @@ current functional edge.conf
 -l=data.echomav.com:1200
 -r
 # edge IP address
--a=172.21.X.Y  <edit as needed,convention is to make the last two octets match the system's eth0 address>
-# netmask
--s=255.255.0.0
+-a=static:172.21.X.Y/16  <edit as needed,convention is to make the last two octets match the system's eth0 address>
 -E
 -A1
 ```
